@@ -3,12 +3,9 @@
 import magicbot
 import wpilib
 
-from networktables.util import ntproperty
 from components import drive
 
 from robotpy_ext.common_drivers import navx
-
-from networktables.networktable import NetworkTable
 
 class Bot(magicbot.MagicRobot):
     drive = drive.Drive

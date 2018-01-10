@@ -1,14 +1,10 @@
 import wpilib
 
-from networktables import NetworkTable
-from networktables.util import ntproperty
-
 ENCODER_ROTATION = 1023
 WHEEL_DIAMETER = 7.639
 
 class Drive:
     robot_drive = wpilib.RobotDrive
-    sd = NetworkTable
 
     def __init__(self):
         self.enabled = False
@@ -21,7 +17,7 @@ class Drive:
     # allows multiple callers in the loop to call our functions without
     # conflicts.
 
-    def move(self, y, rotation, square_inputs=False):
+    def move(self, y, rotation):
         """
         Causes the robot to move
         :param y: The speed that the robot should drive in the Y direction. -1 is forward. [-1.0..1.0]
@@ -32,7 +28,7 @@ class Drive:
 
     def execute(self):
         """Actually drive."""
-        self.robot_drive.arcadeDrive(self.y, -self.rotation, square_inputs=False)
+        self.robot_drive.arcadeDrive(self.y, -self.rotation)
 
         # Prevent robot from driving by default
         self.y = 0
