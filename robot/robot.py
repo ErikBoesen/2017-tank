@@ -3,6 +3,7 @@
 import magicbot
 import wpilib
 
+from robotpy_ext.control.button_debouncer import ButtonDebouncer
 from components import drive
 
 ROT_COR = .145
@@ -25,6 +26,8 @@ class Bot(magicbot.MagicRobot):
         self.rr_motor = wpilib.Victor(0b11)  # => 3
         self.robot_drive = wpilib.RobotDrive(self.lf_motor, self.lr_motor, self.rf_motor, self.rr_motor)
 
+        self.btn_sarah = ButtonDebouncer(self.joystick, 2)
+
     def autonomous(self):
         super().autonomous()
 
@@ -37,8 +40,9 @@ class Bot(magicbot.MagicRobot):
         #self.drive.move(-self.joystick.getY(),self.joystick.getX())
 
         # Corrections for aviator joystick
-        self.drive.move(-2*(self.joystick.getY()+.5), 2*(self.joystick.getX()+.5))
-
+        self.drive.move(-2*(self.joystick.getY()+.5),
+                        2*(self.joystick.getX()+.5),
+                        sarah=self.btn_sarah)
 
 
 if __name__ == '__main__':
