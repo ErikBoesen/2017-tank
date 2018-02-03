@@ -16,8 +16,7 @@ class Bot(magicbot.MagicRobot):
         self.navx = navx.AHRS.create_spi()
 
         # Joysticks
-        self.left_joystick = wpilib.Joystick(0)
-        self.right_joystick = wpilib.Joystick(1)
+        self.joystick = wpilib.Joystick(0)
 
         self.lf_motor = wpilib.Victor(0)
         self.lr_motor = wpilib.Victor(1)
@@ -33,10 +32,8 @@ class Bot(magicbot.MagicRobot):
     def teleopInit(self): pass
 
     def teleopPeriodic(self):
-        self.drive.move(-self.left_joystick.getY(), self.right_joystick.getX())
+        self.drive.move(-self.joystick.getY(), self.joystick.getX())
 
-        if self.right_joystick.getRawButton(4):
-            self.drive.move(-1, 0)
 
 
 if __name__ == '__main__':
