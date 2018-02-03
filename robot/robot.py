@@ -7,6 +7,8 @@ from components import drive
 
 from robotpy_ext.common_drivers import navx
 
+ROT_COR = .145
+
 
 class Bot(magicbot.MagicRobot):
     drive = drive.Drive
@@ -34,7 +36,7 @@ class Bot(magicbot.MagicRobot):
     def teleopPeriodic(self):
         #self.drive.move(-self.joystick.getY(),self.joystick.getX())
         #above is for normal joysticks, below is for weird black joystick with 0,0 in bottom left.
-        self.drive.move(-2*(self.joystick.getY()+.5), 2*(self.joystick.getX()+.5))
+        self.drive.move(-2*(self.joystick.getY()+.5), 2*(self.joystick.getX()+.5-ROT_COR))
 
 
 
