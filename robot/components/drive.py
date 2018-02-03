@@ -23,8 +23,8 @@ class Drive:
     def move(self, y, rotation, sarah=False):
         """
         Causes the robot to move
-        :param y: The speed that the robot should drive in the Y direction. -1 is forward. [-1.0..1.0]
-        :param rotation: The rate of rotation for the robot that is completely independent of the translation. 1 is rotate to the right [-1.0..1.0]
+        :param y: The speed that the robot should drive in the Y direction.
+        :param rotation: The rate of rotation for the robot that is completely independent of the translation.
         :param sarah: Is Sarah driving?
         """
         if sarah:
