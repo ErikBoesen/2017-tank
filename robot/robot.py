@@ -20,10 +20,14 @@ class Bot(magicbot.MagicRobot):
         # Joysticks
         self.joystick = wpilib.Joystick(0)
 
-        self.lf_motor = wpilib.Victor(0)
-        self.lr_motor = wpilib.Victor(1)
-        self.rf_motor = wpilib.Victor(2)
-        self.rr_motor = wpilib.Victor(3)
+        # Drive motor controllers
+        #   Dig | 0/1
+        #   2^1 | Left/Right
+        #   2^0 | Front/Rear
+        self.lf_motor = wpilib.Victor(0b00)  # => 0
+        self.lr_motor = wpilib.Victor(0b01)  # => 1
+        self.rf_motor = wpilib.Victor(0b10)  # => 2
+        self.rr_motor = wpilib.Victor(0b11)  # => 3
         self.robot_drive = wpilib.RobotDrive(self.lf_motor, self.lr_motor, self.rf_motor, self.rr_motor)
 
     def autonomous(self):
