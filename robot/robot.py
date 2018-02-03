@@ -5,8 +5,6 @@ import wpilib
 
 from components import drive
 
-from robotpy_ext.common_drivers import navx
-
 ROT_COR = .145
 
 
@@ -14,9 +12,6 @@ class Bot(magicbot.MagicRobot):
     drive = drive.Drive
 
     def createObjects(self):
-        # NavX (purple board on top of the RoboRIO)
-        self.navx = navx.AHRS.create_spi()
-
         # Joysticks
         self.joystick = wpilib.Joystick(0)
 
