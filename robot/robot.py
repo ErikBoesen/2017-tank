@@ -32,7 +32,9 @@ class Bot(magicbot.MagicRobot):
     def teleopInit(self): pass
 
     def teleopPeriodic(self):
-        self.drive.move(-self.joystick.getY(), self.joystick.getX())
+        #self.drive.move(-self.joystick.getY(),self.joystick.getX())
+        #above is for normal joysticks, below is for weird black joystick with 0,0 in bottom left.
+        self.drive.move(-2*(self.joystick.getY()+.5), 2*(self.joystick.getX()+.5))
 
 
 
