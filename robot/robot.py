@@ -4,6 +4,7 @@ import magicbot
 import wpilib
 
 from robotpy_ext.control.button_debouncer import ButtonDebouncer
+from wpilib.buttons import JoystickButton
 from components import drive, intake
 import wpilib.drive
 
@@ -40,8 +41,8 @@ class Bot(magicbot.MagicRobot):
         self.intake_wheels = wpilib.SpeedControllerGroup(self.intake_wheel_left,
                                                          self.intake_wheel_right)
 
-        self.btn_pull = ButtonDebouncer(self.joystick, 1)
-        self.btn_push = ButtonDebouncer(self.joystick, 3)
+        self.btn_pull = JoystickButton(self.joystick, 1)
+        self.btn_push = JoystickButton(self.joystick, 3)
 
     def autonomous(self):
         super().autonomous()
