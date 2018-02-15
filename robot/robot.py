@@ -4,7 +4,7 @@ import magicbot
 import wpilib
 
 from robotpy_ext.control.button_debouncer import ButtonDebouncer
-from components import drive
+from components import drive, intake
 import wpilib.drive
 
 ROT_COR = -0.145
@@ -12,6 +12,7 @@ ROT_COR = -0.145
 
 class Bot(magicbot.MagicRobot):
     drive = drive.Drive
+    intake = intake.Intake
 
     def createObjects(self):
         # Joysticks
@@ -32,6 +33,16 @@ class Bot(magicbot.MagicRobot):
         self.btn_sarah = ButtonDebouncer(self.joystick, 2)
         self.sarah = False
 
+        # Intake
+        self.intake_wheel_left = wpilib.Spark(4)
+        self.intake_wheel_left.setInverted(True)
+        self.intake_wheel_right = wpilib.Spark(5)
+        self.intake_wheels = wpilib.SpeedControllerGroup(self.intake_wheel_left,
+                                                         self.intake_wheel_right)
+
+        self.btn_pull = ButtonDebouncer(self.joystick, 1)
+        self.btn_push = ButtonDebouncer(self.joystick, 3)
+
     def autonomous(self):
         super().autonomous()
 
@@ -50,6 +61,11 @@ class Bot(magicbot.MagicRobot):
 
         if self.btn_sarah:
             self.sarah = not self.sarah
+
+        if self.btn_pull.get():
+            self.intake.pull()
+        elif self.btn_push.get():
+            self.intake.push()
 
 
 if __name__ == '__main__':
