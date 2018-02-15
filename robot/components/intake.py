@@ -2,7 +2,7 @@ import wpilib
 from magicbot import will_reset_to
 from magicbot import tunable
 
-SPEED_MULTIPLIER = 0.5
+SPEED_MULTIPLIER = 1 / 4
 
 
 class Intake:
