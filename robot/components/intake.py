@@ -35,5 +35,4 @@ class Intake:
         """
         Run intake motors.
         """
-        self.shoulders.set(self._shoulder_speed)
         self.intake_wheels.set(self._intake_wheel_speed)
