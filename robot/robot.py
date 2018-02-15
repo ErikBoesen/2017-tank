@@ -39,6 +39,7 @@ class Bot(magicbot.MagicRobot):
         self.intake_wheel_right = wpilib.Spark(4)
         self.intake_wheels = wpilib.SpeedControllerGroup(self.intake_wheel_left,
                                                          self.intake_wheel_right)
+        self.intake_wheels.setInverted(True)
 
         self.btn_pull = JoystickButton(self.joystick, 1)
         self.btn_push = JoystickButton(self.joystick, 3)
