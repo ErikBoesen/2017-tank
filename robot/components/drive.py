@@ -36,7 +36,7 @@ class Drive:
 
     def execute(self):
         """Actually drive."""
-        self.drivetrain.arcadeDrive(self.y, -self.rotation)
+        self.drivetrain.arcadeDrive(self.y, self.rotation)
 
         # Prevent robot from driving by default
         self.y = 0
