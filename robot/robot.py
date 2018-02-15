@@ -35,9 +35,8 @@ class Bot(magicbot.MagicRobot):
         self.sarah = False
 
         # Intake
-        self.intake_wheel_left = wpilib.Spark(4)
-        self.intake_wheel_left.setInverted(True)
-        self.intake_wheel_right = wpilib.Spark(5)
+        self.intake_wheel_left = wpilib.Spark(5)
+        self.intake_wheel_right = wpilib.Spark(4)
         self.intake_wheels = wpilib.SpeedControllerGroup(self.intake_wheel_left,
                                                          self.intake_wheel_right)
 
