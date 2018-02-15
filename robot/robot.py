@@ -12,8 +12,8 @@ ROT_COR = -0.145
 
 
 class Bot(magicbot.MagicRobot):
-    drive = drive.Drive
-    intake = intake.Intake
+    drive: drive.Drive
+    intake: intake.Intake
 
     def createObjects(self):
         # Joysticks
