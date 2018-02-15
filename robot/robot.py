@@ -41,8 +41,8 @@ class Bot(magicbot.MagicRobot):
                                                          self.intake_wheel_right)
         self.intake_wheels.setInverted(True)
 
-        self.btn_pull = JoystickButton(self.joystick, 1)
-        self.btn_push = JoystickButton(self.joystick, 3)
+        self.btn_pull = JoystickButton(self.joystick, 3)
+        self.btn_push = JoystickButton(self.joystick, 1)
 
     def autonomous(self):
         super().autonomous()
