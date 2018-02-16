@@ -53,11 +53,11 @@ class Bot(magicbot.MagicRobot):
 
     def teleopPeriodic(self):
         # Normal joysticks
-        #self.drive.move(-self.joystick.getY(),self.joystick.getX())
+        # self.drive.move(-self.joystick.getY(),self.joystick.getX())
 
         # Corrections for aviator joystick
-        self.drive.move(-2*(self.joystick.getY()+.5),
-                        2*(self.joystick.getX()+.5)+ROT_COR,
+        self.drive.move(-2 * (self.joystick.getY() + .5),
+                        2 * (self.joystick.getX() + .5) + ROT_COR,
                         sarah=self.sarah)
 
         if self.btn_sarah:
