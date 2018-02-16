@@ -11,8 +11,7 @@ class Intake:
     """
     intake_wheels: wpilib.SpeedControllerGroup
 
-    def __init__(self):
-        self._intake_wheel_speed = will_reset_to(0)
+    _intake_wheel_speed = will_reset_to(0)
 
     def spin(self, speed: float=SPEED_MULTIPLIER):
         """
