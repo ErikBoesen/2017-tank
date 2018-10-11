@@ -17,6 +17,7 @@ class Bot(magicbot.MagicRobot):
 
     def createObjects(self):
         # Joysticks
+
         self.joystick = wpilib.Joystick(0)
 
         # Drive motor controllers
@@ -70,4 +71,4 @@ class Bot(magicbot.MagicRobot):
 
 
 if __name__ == '__main__':
-    wpilib.run(Bot)
+    wpilib.run(Bot, physics_enabled=True)
