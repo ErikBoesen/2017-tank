@@ -5,8 +5,10 @@ import wpilib
 
 from robotpy_ext.control.button_debouncer import ButtonDebouncer
 from wpilib.buttons import JoystickButton
-from components import drive, intake
+from components import drive, intake, trajectory_follower
 import wpilib.drive
+from robotpy_ext.common_drivers import navx
+import math
 
 ROT_COR = -0.145
 
@@ -14,6 +16,7 @@ ROT_COR = -0.145
 class Bot(magicbot.MagicRobot):
     drive: drive.Drive
     intake: intake.Intake
+    follower: trajectory_follower.TrajectoryFollower
 
     def createObjects(self):
         # Joysticks
@@ -31,6 +34,16 @@ class Bot(magicbot.MagicRobot):
 
         self.drivetrain = wpilib.drive.DifferentialDrive(wpilib.SpeedControllerGroup(self.lf_motor, self.lr_motor),
                                                     wpilib.SpeedControllerGroup(self.rf_motor, self.rr_motor))
+
+        # NavX (purple board on top of the RoboRIO)
+        self.navx = navx.AHRS.create_spi()
+        self.navx.reset()
+
+        self.l_encoder = wpilib.Encoder(0, 1)
+        self.l_encoder.setDistancePerPulse((math.pi * 6) / 360)
+
+        self.r_encoder = wpilib.Encoder(2, 3)
+        self.r_encoder.setDistancePerPulse((math.pi * 6) / 360)
 
         self.btn_sarah = ButtonDebouncer(self.joystick, 2)
         self.sarah = False

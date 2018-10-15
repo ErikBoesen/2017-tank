@@ -5,6 +5,7 @@
 
 from pyfrc.physics import motor_cfgs, tankmodel
 from pyfrc.physics.units import units
+import math
 
 
 class PhysicsEngine(object):
@@ -22,18 +23,22 @@ class PhysicsEngine(object):
         self.physics_controller = physics_controller
 
         # Change these parameters to fit your robot!
-        bumper_width = 3.25*units.inch
 
         self.drivetrain = tankmodel.TankModel.theory(
             motor_cfgs.MOTOR_CFG_CIM,           # motor configuration
-            110*units.lbs,                      # robot mass
-            10.71,                              # drivetrain gear ratio
+            50*units.lbs,                      # robot mass
+            12.75,                              # drivetrain gear ratio
             2,                                  # motors per side
-            22*units.inch,                      # robot wheelbase
-            23*units.inch + bumper_width*2,     # robot width
-            32*units.inch + bumper_width*2,     # robot length
+            18*units.inch,                      # robot wheelbase
+            21.4*units.inch,     # robot width
+            28.25*units.inch,     # robot length
             6*units.inch                        # wheel diameter
         )
+
+        self.kEncoder = 360 / (6 * math.pi)
+
+        self.l_distance = 0
+        self.r_distance = 0
 
     def update_sim(self, hal_data, now, tm_diff):
         '''
@@ -46,12 +51,19 @@ class PhysicsEngine(object):
         '''
 
         # Simulate the drivetrain
-        lr_motor = hal_data['pwm'][1]['value']
-        rr_motor = hal_data['pwm'][2]['value']
+        lr_motor = hal_data['pwm'][8]['value']
+        rr_motor = hal_data['pwm'][6]['value']
 
         # Not needed because front and rear should be in sync
-        #lf_motor = hal_data['pwm'][3]['value']
-        #rf_motor = hal_data['pwm'][4]['value']
+        # lf_motor = hal_data['pwm'][3]['value']
+        # rf_motor = hal_data['pwm'][4]['value']
 
-        x, y, angle = self.drivetrain.get_distance(lr_motor, rr_motor, tm_diff)
+        x, y, angle = self.drivetrain.get_distance(rr_motor, lr_motor, tm_diff)
         self.physics_controller.distance_drive(x, y, angle)
+
+        # Update encoders
+        self.l_distance += self.drivetrain.l_velocity * tm_diff
+        self.r_distance += self.drivetrain.r_velocity * tm_diff
+
+        hal_data['encoder'][0]['count'] = int(self.l_distance * self.kEncoder)
+        hal_data['encoder'][1]['count'] = int(self.r_distance * self.kEncoder)
