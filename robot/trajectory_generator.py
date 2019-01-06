@@ -9,13 +9,13 @@ TRAJECTORY_DIRECTORY = 'trajectories'
 
 
 trajectories = {
-    "charge": [
-        pf.Waypoint(0, 0, 0), # Waypoints are relative to first, so start at 0, 0, 0
-        pf.Waypoint(10, 0, 0)
-    ],
     "diagonal": [
-        pf.Waypoint(0, 0, 0),
+        pf.Waypoint(0, 0, 0), # Waypoints are relative to first, so start at 0, 0, 0
         pf.Waypoint(15, 5, 0)
+    ],
+    "charge": [
+        pf.Waypoint(0, 0, 0),
+        pf.Waypoint(10, 0, 0)
     ]
 }
 
@@ -37,25 +37,23 @@ def _write_trajectories(trajectories):
 def _generate_trajectories():
     generated_trajectories = {}
 
-    for trajectory_name in trajectories.keys():
+    for trajectory_name, trajectory in trajectories.items():
         generated_trajectory = pf.generate(
-                                   trajectories[trajectory_name],
+                                   trajectory,
                                    pf.FIT_HERMITE_CUBIC,
                                    pf.SAMPLES_HIGH,
                                    dt=0.02, # 20ms
-                                   max_velocity=10.903,
-                                   max_acceleration=53.251,
+                                   max_velocity=10.903,     # These are in ft/sec and
+                                   max_acceleration=53.251, # set the units for distance to ft.
                                    max_jerk=120
                                )[1] # The 0th element is just info
 
         modifier = pf.modifiers.TankModifier(generated_trajectory).modify(WHEELBASE_WIDTH)
 
-        generated_trajectories.update({
-            trajectory_name: (
-                modifier.getLeftTrajectory(),
-                modifier.getRightTrajectory()
-            )
-        })
+        generated_trajectories[trajectory_name] = (
+            modifier.getLeftTrajectory(),
+            modifier.getRightTrajectory()
+        )
 
     if wpilib.RobotBase.isSimulation():
         from pyfrc.sim import get_user_renderer

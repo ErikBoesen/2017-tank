@@ -12,6 +12,9 @@ class Charge(AutonomousStateMachine):
     follower: trajectory_follower.TrajectoryFollower
 
     @state(first=True)
-    def trajectory_follower(self, initial_call):
+    def charge(self, initial_call):
         if initial_call:
-            self.follower.follow_trajectory(self.follower.generated_trajectories['diagonal'])
+            self.follower.follow_trajectory('charge')
+
+        if not self.follower.is_following('charge'):
+            self.done() # If using mutliple states use self.next_state(name)

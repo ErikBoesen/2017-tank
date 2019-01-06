@@ -1,9 +1,8 @@
+import pathfinder as pf
+from robotpy_ext.common_drivers import navx
 from typing import Tuple, List, Dict
 import wpilib
 from wpilib import drive
-import pathfinder as pf
-from robotpy_ext.common_drivers import navx
-from magicbot.magic_reset import will_reset_to
 
 
 class TrajectoryFollower:
@@ -13,7 +12,7 @@ class TrajectoryFollower:
     # TODO FIND THE REAL VALUES
     WHEEL_DIAMETER = 0.5
     KV = 1.101
-    KA = 0.225 # 102
+    KA = 0.225 # 0.102
 
     drivetrain: drive.DifferentialDrive
     navx: navx.AHRS
@@ -27,14 +26,15 @@ class TrajectoryFollower:
         self.left_follower = pf.followers.EncoderFollower(None)
         self.right_follower = pf.followers.EncoderFollower(None)
 
-        self.left_follower.configurePIDVA(0, 0, 0, 1 / 5, 0)
-        self.right_follower.configurePIDVA(0, 0, 0, 1 / 5, 0)
+        self.left_follower.configurePIDVA(1.0, 0, 0, 1 / 10.903, 0)
+        self.right_follower.configurePIDVA(1.0, 0, 0, 1 / 10.903, 0)
 
         self._cofigure_encoders()
 
-    def follow_trajectory(self, trajectories: Tuple[List[pf.Segment], List[pf.Segment]]):
-        self.left_follower.setTrajectory(trajectories[0])
-        self.right_follower.setTrajectory(trajectories[1])
+    def follow_trajectory(self, trajectory_name: str):
+        self._current_trajectory = trajectory_name
+        self.left_follower.setTrajectory(self.generated_trajectories[trajectory_name][0])
+        self.right_follower.setTrajectory(self.generated_trajectories[trajectory_name][1])
 
         self._cofigure_encoders()
 
@@ -42,9 +42,15 @@ class TrajectoryFollower:
         self.left_follower.configureEncoder(self.l_encoder.get(), 360, self.WHEEL_DIAMETER)
         self.right_follower.configureEncoder(self.r_encoder.get(), 360, self.WHEEL_DIAMETER)
 
+    def is_following(self, trajectory_name):
+        if self._current_trajectory == trajectory_name:
+            return True
+        return False
+
     def execute(self):
         if (self.left_follower.trajectory is None or self.right_follower.trajectory is None) or \
            (self.left_follower.isFinished() and self.right_follower.isFinished()):
+           self._current_trajectory = None
            return
 
         l = self.left_follower.calculate(self.l_encoder.get())
@@ -59,9 +65,9 @@ class TrajectoryFollower:
 
         # This is a poor man's P controller
         angle_difference = pf.boundHalfDegrees(desired_heading - gyro_heading)
-        # turn = (5 * (-1.0 / 80.0) * angle_difference) + (0.1 * (angle_difference - self.last_difference))
-        # turn = 5 * (-1.0 / 80.0) * angleDifference
-        turn = 0
+        # turn = (1.0 * (-1.0 / 80.0) * angle_difference) + (0.05 * (angle_difference - self.last_difference))
+        turn = 0.5 * (-1.0 / 80.0) * angle_difference
+        # turn = 0
 
         self.last_difference = angle_difference
 
