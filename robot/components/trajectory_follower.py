@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 import wpilib
 from wpilib import drive
 import pathfinder as pf
@@ -19,6 +19,7 @@ class TrajectoryFollower:
     navx: navx.AHRS
     l_encoder: wpilib.Encoder
     r_encoder: wpilib.Encoder
+    generated_trajectories: Dict
 
     def on_enable(self):
         self.last_difference = 0
@@ -26,8 +27,8 @@ class TrajectoryFollower:
         self.left_follower = pf.followers.EncoderFollower(None)
         self.right_follower = pf.followers.EncoderFollower(None)
 
-        self.left_follower.configurePIDVA(1.0, 0, 0, 1 / 5, 0)
-        self.right_follower.configurePIDVA(1.0, 0, 0, 1 / 5, 0)
+        self.left_follower.configurePIDVA(0, 0, 0, 1 / 5, 0)
+        self.right_follower.configurePIDVA(0, 0, 0, 1 / 5, 0)
 
         self._cofigure_encoders()
 
@@ -58,9 +59,9 @@ class TrajectoryFollower:
 
         # This is a poor man's P controller
         angle_difference = pf.boundHalfDegrees(desired_heading - gyro_heading)
-        turn = (5 * (-1.0 / 80.0) * angle_difference) + (0.1 * (angle_difference - self.last_difference))
+        # turn = (5 * (-1.0 / 80.0) * angle_difference) + (0.1 * (angle_difference - self.last_difference))
         # turn = 5 * (-1.0 / 80.0) * angleDifference
-        # turn = 0
+        turn = 0
 
         self.last_difference = angle_difference
 

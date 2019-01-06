@@ -9,6 +9,7 @@ from components import drive, intake, trajectory_follower
 import wpilib.drive
 from robotpy_ext.common_drivers import navx
 import math
+from trajectory_generator import load_trajectories
 
 ROT_COR = -0.145
 
@@ -44,6 +45,8 @@ class Bot(magicbot.MagicRobot):
 
         self.r_encoder = wpilib.Encoder(2, 3)
         self.r_encoder.setDistancePerPulse((math.pi * 0.5) / 360)
+
+        self.generated_trajectories = load_trajectories()
 
         self.btn_sarah = ButtonDebouncer(self.joystick, 2)
         self.sarah = False

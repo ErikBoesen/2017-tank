@@ -1,53 +1,69 @@
-import os.path
+import os
 import pickle
 import pathfinder as pf
 import wpilib
 
-points = [
-    pf.Waypoint(0, 0, 0), # Waypoints are relative to first, so start at 0, 0, 0
-    pf.Waypoint(15, 5, 0),
-]
 
-info, trajectory = pf.generate(points, pf.FIT_HERMITE_CUBIC, pf.SAMPLES_HIGH,
-                               dt=0.02, # 20ms
-                               max_velocity=10.903,
-                               max_acceleration=53.251,
-                               max_jerk=120)
+WHEELBASE_WIDTH = 2 # In feet
+TRAJECTORY_DIRECTORY = 'trajectories'
 
-modifier = pf.modifiers.TankModifier(trajectory).modify(2)
 
-left_trajectory = None
-right_trajectory = None
+trajectories = {
+    "charge": [
+        pf.Waypoint(0, 0, 0), # Waypoints are relative to first, so start at 0, 0, 0
+        pf.Waypoint(10, 0, 0)
+    ],
+    "diagonal": [
+        pf.Waypoint(0, 0, 0),
+        pf.Waypoint(15, 5, 0)
+    ]
+}
 
-trajectories = {}
+def load_trajectories():
+    if wpilib.RobotBase.isSimulation():
+        generated_trajectories = _generate_trajectories()
+        _write_trajectories(generated_trajectories)
+    else:
+        with open(os.path.join(os.path.dirname(__file__) + os.sep + TRAJECTORY_DIRECTORY, 'trajectories.pickle'), 'rb') as f:
+            generated_trajectories = pickle.load(f)
 
-# because of a quirk in pyfrc, this must be in a subdirectory
-# or the file won't get copied over to the robot
-picke_file_left = os.path.join(os.path.dirname(__file__), 'trajectory_left.pickle')
-pickle_file_right = os.path.join(os.path.dirname(__file__), 'trajectory_right.pickle')
+    return generated_trajectories
 
-if wpilib.RobotBase.isSimulation():
-    # generate the trajectory here
+def _write_trajectories(trajectories):
+    pickle_file = os.path.join(os.path.dirname(__file__) + os.sep + TRAJECTORY_DIRECTORY, 'trajectories.pickle')
+    with open(pickle_file, 'wb') as f:
+        pickle.dump(trajectories, f)
 
-    left_trajectory = modifier.getLeftTrajectory()
-    right_trajectory = modifier.getRightTrajectory()
+def _generate_trajectories():
+    generated_trajectories = {}
 
-    # and then write it out
-    with open(picke_file_left, 'wb') as fp:
-        pickle.dump(modifier.getLeftTrajectory(), fp)
-    with open(pickle_file_right, 'wb') as fp:
-        pickle.dump(modifier.getRightTrajectory(), fp)
+    for trajectory_name in trajectories.keys():
+        generated_trajectory = pf.generate(
+                                   trajectories[trajectory_name],
+                                   pf.FIT_HERMITE_CUBIC,
+                                   pf.SAMPLES_HIGH,
+                                   dt=0.02, # 20ms
+                                   max_velocity=10.903,
+                                   max_acceleration=53.251,
+                                   max_jerk=120
+                               )[1] # The 0th element is just info
 
-    from pyfrc.sim import get_user_renderer
+        modifier = pf.modifiers.TankModifier(generated_trajectory).modify(WHEELBASE_WIDTH)
 
-    renderer = get_user_renderer()
-    if renderer:
-        renderer.draw_pathfinder_trajectory(modifier.getLeftTrajectory(), '#0000ff', offset=(-1, 0))
-        renderer.draw_pathfinder_trajectory(modifier.source, '#00ff00', show_dt=True)
-        renderer.draw_pathfinder_trajectory(modifier.getRightTrajectory(), '#0000ff', offset=(1, 0))
+        generated_trajectories.update({
+            trajectory_name: (
+                modifier.getLeftTrajectory(),
+                modifier.getRightTrajectory()
+            )
+        })
 
-else:
-    with open('trajectory_left.pickle', 'rb') as fp:
-        left_trajectory = pickle.load(fp)
-    with open('trajectory_right.pickle', 'rb') as fp:
-        right_trajectory = pickle.load(fp)
+    if wpilib.RobotBase.isSimulation():
+        from pyfrc.sim import get_user_renderer
+
+        renderer = get_user_renderer()
+        if renderer:
+            renderer.draw_pathfinder_trajectory(modifier.getLeftTrajectory(), '#0000ff', offset=(-1, 0))
+            renderer.draw_pathfinder_trajectory(modifier.source, '#00ff00', show_dt=True)
+            renderer.draw_pathfinder_trajectory(modifier.getRightTrajectory(), '#0000ff', offset=(1, 0))
+
+    return generated_trajectories
