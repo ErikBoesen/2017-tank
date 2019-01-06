@@ -21,7 +21,6 @@ class Bot(magicbot.MagicRobot):
 
     def createObjects(self):
         # Joysticks
-
         self.joystick = wpilib.Joystick(0)
 
         # Drive motor controllers
@@ -34,7 +33,7 @@ class Bot(magicbot.MagicRobot):
         self.rr_motor = wpilib.Victor(0b11) # =>3
 
         self.drivetrain = wpilib.drive.DifferentialDrive(wpilib.SpeedControllerGroup(self.lf_motor, self.lr_motor),
-                                                    wpilib.SpeedControllerGroup(self.rf_motor, self.rr_motor))
+                                                         wpilib.SpeedControllerGroup(self.rf_motor, self.rr_motor))
 
         # NavX (purple board on top of the RoboRIO)
         self.navx = navx.AHRS.create_spi()
@@ -64,18 +63,15 @@ class Bot(magicbot.MagicRobot):
     def autonomous(self):
         super().autonomous()
 
-    def disabledPeriodic(self): pass
-    def disabledInit(self): pass
-    def autonomousInit(self): pass
-    def autonomousPeriodic(self): pass
-    def teleopInit(self): pass
+    def teleopInit(self):
+        pass
 
     def teleopPeriodic(self):
         # Normal joysticks
-        self.drive.move(-self.joystick.getY(),self.joystick.getX())
+        self.drive.move(-self.joystick.getY(), self.joystick.getX())
 
         # Corrections for aviator joystick
-        #self.drive.move(-2*(self.joystick.getY()+.5),
+        # self.drive.move(-2*(self.joystick.getY()+.5),
         #                2*(self.joystick.getX()+.5)+ROT_COR,
         #                sarah=self.sarah)
 

@@ -17,4 +17,4 @@ class Charge(AutonomousStateMachine):
             self.follower.follow_trajectory('charge')
 
         if not self.follower.is_following('charge'):
-            self.done() # If using mutliple states use self.next_state(name)
+            self.done()  # If using mutliple states use self.next_state(name)

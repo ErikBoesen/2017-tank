@@ -12,7 +12,7 @@ class TrajectoryFollower:
     # TODO FIND THE REAL VALUES
     WHEEL_DIAMETER = 0.5
     KV = 1.101
-    KA = 0.225 # 0.102
+    KA = 0.225  # 0.102
 
     drivetrain: drive.DifferentialDrive
     navx: navx.AHRS
@@ -21,6 +21,7 @@ class TrajectoryFollower:
     generated_trajectories: Dict
 
     def on_enable(self):
+        self._current_trajectory = None
         self.last_difference = 0
 
         self.left_follower = pf.followers.EncoderFollower(None)
@@ -43,18 +44,17 @@ class TrajectoryFollower:
         self.right_follower.configureEncoder(self.r_encoder.get(), 360, self.WHEEL_DIAMETER)
 
     def is_following(self, trajectory_name):
-        if self._current_trajectory == trajectory_name:
-            return True
-        return False
+        return (self._current_trajectory is not None and
+            self._current_trajectory == trajectory_name)
 
     def execute(self):
         if (self.left_follower.trajectory is None or self.right_follower.trajectory is None) or \
            (self.left_follower.isFinished() and self.right_follower.isFinished()):
-           self._current_trajectory = None
-           return
+            self._current_trajectory = None
+            return
 
-        l = self.left_follower.calculate(self.l_encoder.get())
-        r = self.right_follower.calculate(self.r_encoder.get())
+        left = self.left_follower.calculate(self.l_encoder.get())
+        right = self.right_follower.calculate(self.r_encoder.get())
 
         gyro_heading = (
             -self.navx.getAngle()
@@ -71,8 +71,8 @@ class TrajectoryFollower:
 
         self.last_difference = angle_difference
 
-        l = l + turn
-        r = r - turn
+        left += turn
+        right -= turn
 
         # -1 is forward, so invert both values
-        self.drivetrain.tankDrive(-l, -r)
+        self.drivetrain.tankDrive(-left, -right)
