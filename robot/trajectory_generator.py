@@ -2,23 +2,24 @@ import os.path
 import pickle
 import pathfinder as pf
 import wpilib
-import math
 
 points = [
-    pf.Waypoint(2, 1, 0), # Waypoint @ x=0, y=0,   exit angle=0 radians
-    pf.Waypoint(5, 0, 0)
+    pf.Waypoint(0, 0, 0), # Waypoints are relative to first, so start at 0, 0, 0
+    pf.Waypoint(15, 5, 0),
 ]
 
 info, trajectory = pf.generate(points, pf.FIT_HERMITE_CUBIC, pf.SAMPLES_HIGH,
                                dt=0.02, # 20ms
                                max_velocity=10.903,
-                               max_acceleration=117.152,
-                               max_jerk=300.0)
+                               max_acceleration=53.251,
+                               max_jerk=120)
 
-modifier = pf.modifiers.TankModifier(trajectory).modify(0.5)
+modifier = pf.modifiers.TankModifier(trajectory).modify(2)
 
 left_trajectory = None
 right_trajectory = None
+
+trajectories = {}
 
 # because of a quirk in pyfrc, this must be in a subdirectory
 # or the file won't get copied over to the robot
@@ -42,7 +43,7 @@ if wpilib.RobotBase.isSimulation():
     renderer = get_user_renderer()
     if renderer:
         renderer.draw_pathfinder_trajectory(modifier.getLeftTrajectory(), '#0000ff', offset=(-1, 0))
-        renderer.draw_pathfinder_trajectory(modifier.source, '#00ff00')
+        renderer.draw_pathfinder_trajectory(modifier.source, '#00ff00', show_dt=True)
         renderer.draw_pathfinder_trajectory(modifier.getRightTrajectory(), '#0000ff', offset=(1, 0))
 
 else:

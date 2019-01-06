@@ -40,10 +40,10 @@ class Bot(magicbot.MagicRobot):
         self.navx.reset()
 
         self.l_encoder = wpilib.Encoder(0, 1)
-        self.l_encoder.setDistancePerPulse((math.pi * 6) / 360)
+        self.l_encoder.setDistancePerPulse((math.pi * 0.5) / 360)
 
         self.r_encoder = wpilib.Encoder(2, 3)
-        self.r_encoder.setDistancePerPulse((math.pi * 6) / 360)
+        self.r_encoder.setDistancePerPulse((math.pi * 0.5) / 360)
 
         self.btn_sarah = ButtonDebouncer(self.joystick, 2)
         self.sarah = False
@@ -63,6 +63,8 @@ class Bot(magicbot.MagicRobot):
 
     def disabledPeriodic(self): pass
     def disabledInit(self): pass
+    def autonomousInit(self): pass
+    def autonomousPeriodic(self): pass
     def teleopInit(self): pass
 
     def teleopPeriodic(self):

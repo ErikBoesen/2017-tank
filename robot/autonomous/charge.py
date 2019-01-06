@@ -12,11 +12,6 @@ class Charge(AutonomousStateMachine):
     drive = drive.Drive
     follower: trajectory_follower.TrajectoryFollower
 
-    @timed_state(duration=3)
-    def charge(self):
-        # Move forward
-        self.drive.move(1, 0)
-
     @state(first=True)
     def trajectory_follower(self, initial_call):
         if initial_call:

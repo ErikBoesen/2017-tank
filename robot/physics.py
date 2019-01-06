@@ -26,16 +26,16 @@ class PhysicsEngine(object):
 
         self.drivetrain = tankmodel.TankModel.theory(
             motor_cfgs.MOTOR_CFG_CIM,           # motor configuration
-            50*units.lbs,                      # robot mass
+            110*units.lbs,                      # robot mass
             12.75,                              # drivetrain gear ratio
             2,                                  # motors per side
-            18*units.inch,                      # robot wheelbase
-            21.4*units.inch,     # robot width
-            28.25*units.inch,     # robot length
+            24*units.inch,                      # robot wheelbase
+            25*units.inch,     # robot width
+            30*units.inch,     # robot length
             6*units.inch                        # wheel diameter
         )
 
-        self.kEncoder = 360 / (6 * math.pi)
+        self.kEncoder = 360 / (0.5 * math.pi)
 
         self.l_distance = 0
         self.r_distance = 0
@@ -51,16 +51,16 @@ class PhysicsEngine(object):
         '''
 
         # Simulate the drivetrain
-        lr_motor = hal_data['pwm'][8]['value']
-        rr_motor = hal_data['pwm'][6]['value']
+        lf_motor = hal_data['pwm'][9]['value']
+        rf_motor = hal_data['pwm'][7]['value']
 
         # Not needed because front and rear should be in sync
-        # lf_motor = hal_data['pwm'][3]['value']
-        # rf_motor = hal_data['pwm'][4]['value']
+        # lr_motor = hal_data['pwm'][8]['value']
+        # rr_motor = hal_data['pwm'][6]['value']
 
-        x, y, angle = self.drivetrain.get_distance(rr_motor, lr_motor, tm_diff)
+        x, y, angle = self.drivetrain.get_distance(lf_motor, rf_motor, tm_diff)
         self.physics_controller.distance_drive(x, y, angle)
-
+        
         # Update encoders
         self.l_distance += self.drivetrain.l_velocity * tm_diff
         self.r_distance += self.drivetrain.r_velocity * tm_diff
