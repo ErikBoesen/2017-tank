@@ -13,19 +13,16 @@ class PhysicsEngine(object):
         :param physics_controller: `pyfrc.physics.core.Physics` object
                                        to communicate simulation effects to
         """
-
         self.physics_controller = physics_controller
-
-        # Change these parameters to fit your robot!
 
         self.drivetrain = tankmodel.TankModel.theory(
             motor_cfgs.MOTOR_CFG_CIM,           # motor configuration
             110 * units.lbs,                      # robot mass
             12.75,                              # drivetrain gear ratio
             2,                                  # motors per side
-            24 * units.inch,                      # robot wheelbase
-            25 * units.inch,     # robot width
-            30 * units.inch,     # robot length
+            17.75 * units.inch,                      # robot wheelbase
+            21.63 * units.inch,     # robot width
+            28 * units.inch,     # robot length
             6 * units.inch                        # wheel diameter
         )
 

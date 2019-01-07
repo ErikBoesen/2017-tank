@@ -7,7 +7,7 @@ from robotpy_ext.control.button_debouncer import ButtonDebouncer
 from wpilib.buttons import JoystickButton
 from components import drive, intake, trajectory_follower
 import wpilib.drive
-from robotpy_ext.common_drivers import navx
+import navx
 import math
 from trajectory_generator import load_trajectories
 
@@ -85,4 +85,4 @@ class Bot(magicbot.MagicRobot):
 
 
 if __name__ == '__main__':
-    wpilib.run(Bot, physics_enabled=True)
+    wpilib.run(Bot)

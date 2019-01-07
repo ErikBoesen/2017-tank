@@ -8,7 +8,7 @@ class Charge(AutonomousStateMachine):
     MODE_NAME = 'Charge'
     DEFAULT = True
 
-    drive = drive.Drive
+    drive: drive.Drive
     follower: trajectory_follower.TrajectoryFollower
 
     @state(first=True)

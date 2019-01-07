@@ -1,6 +1,6 @@
 import pathfinder as pf
-from robotpy_ext.common_drivers import navx
-from typing import Tuple, List, Dict
+import navx
+from typing import Tuple, List
 import wpilib
 from wpilib import drive
 
@@ -18,7 +18,7 @@ class TrajectoryFollower:
     navx: navx.AHRS
     l_encoder: wpilib.Encoder
     r_encoder: wpilib.Encoder
-    generated_trajectories: Dict
+    generated_trajectories: dict
 
     def on_enable(self):
         self._current_trajectory = None
@@ -48,8 +48,8 @@ class TrajectoryFollower:
             self._current_trajectory == trajectory_name)
 
     def execute(self):
-        if (self.left_follower.trajectory is None or self.right_follower.trajectory is None) or \
-           (self.left_follower.isFinished() and self.right_follower.isFinished()):
+        if ((self.left_follower.trajectory is None or self.right_follower.trajectory is None) or
+           (self.left_follower.isFinished() and self.right_follower.isFinished())):
             self._current_trajectory = None
             return
 
@@ -65,8 +65,8 @@ class TrajectoryFollower:
 
         # This is a poor man's P controller
         angle_difference = pf.boundHalfDegrees(desired_heading - gyro_heading)
-        # turn = (1.0 * (-1.0 / 80.0) * angle_difference) + (0.05 * (angle_difference - self.last_difference))
-        turn = 0.5 * (-1.0 / 80.0) * angle_difference
+        turn = (2.3 * (-1.0 / 80.0) * angle_difference) + (0.05 * (angle_difference - self.last_difference))
+        # turn = 0.7 * (-1.0 / 80.0) * angle_difference
         # turn = 0
 
         self.last_difference = angle_difference

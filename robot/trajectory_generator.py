@@ -4,7 +4,7 @@ import pathfinder as pf
 import wpilib
 
 
-WHEELBASE_WIDTH = 2  # In feet
+WHEELBASE_WIDTH = 1.479  # In feet
 TRAJECTORY_DIRECTORY = 'trajectories'
 PICKLE_FILE = os.path.join(os.path.dirname(__file__), TRAJECTORY_DIRECTORY, 'trajectories.pickle')
 
@@ -62,8 +62,8 @@ def _generate_trajectories():
 
         renderer = get_user_renderer()
         if renderer:
-            renderer.draw_pathfinder_trajectory(modifier.getLeftTrajectory(), '#0000ff', offset=(-1, 0))
+            renderer.draw_pathfinder_trajectory(modifier.getLeftTrajectory(), '#0000ff', offset=(-0.9, 0))
             renderer.draw_pathfinder_trajectory(modifier.source, '#00ff00', show_dt=True)
-            renderer.draw_pathfinder_trajectory(modifier.getRightTrajectory(), '#0000ff', offset=(1, 0))
+            renderer.draw_pathfinder_trajectory(modifier.getRightTrajectory(), '#0000ff', offset=(0.9, 0))
 
     return generated_trajectories

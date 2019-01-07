@@ -3,3 +3,4 @@ robotpy-ctre>=2018.0.0
 pynetworktables>=2018.0.0
 pybind11>=2.2.2
 robotpy-pathfinder>=0.2.5
+robotpy-navx>=2018.0.0
