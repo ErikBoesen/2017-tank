@@ -12,7 +12,7 @@ class TrajectoryFollower:
     # TODO FIND THE REAL VALUES
     WHEEL_DIAMETER = 0.5
     KV = 1.101
-    KA = 0.225  # 0.102
+    KA = 0.164  # 0.102
 
     drivetrain: drive.DifferentialDrive
     navx: navx.AHRS
@@ -27,8 +27,8 @@ class TrajectoryFollower:
         self.left_follower = pf.followers.EncoderFollower(None)
         self.right_follower = pf.followers.EncoderFollower(None)
 
-        self.left_follower.configurePIDVA(1.0, 0, 0, 1 / 10.903, 0)
-        self.right_follower.configurePIDVA(1.0, 0, 0, 1 / 10.903, 0)
+        self.left_follower.configurePIDVA(1.0, 0, 0.1, 1 / 10.903, 1 / 73.220)
+        self.right_follower.configurePIDVA(1.0, 0, 0.1, 1 / 10.903, 1 / 73.220)
 
         self._cofigure_encoders()
 
@@ -44,12 +44,11 @@ class TrajectoryFollower:
         self.right_follower.configureEncoder(self.r_encoder.get(), 360, self.WHEEL_DIAMETER)
 
     def is_following(self, trajectory_name):
-        return (self._current_trajectory is not None and
-            self._current_trajectory == trajectory_name)
+        return self._current_trajectory is not None and self._current_trajectory == trajectory_name
 
     def execute(self):
-        if ((self.left_follower.trajectory is None or self.right_follower.trajectory is None) or
-           (self.left_follower.isFinished() and self.right_follower.isFinished())):
+        if (self.left_follower.trajectory is None or self.right_follower.trajectory is None) or \
+           (self.left_follower.isFinished() and self.right_follower.isFinished()):
             self._current_trajectory = None
             return
 
@@ -65,7 +64,7 @@ class TrajectoryFollower:
 
         # This is a poor man's P controller
         angle_difference = pf.boundHalfDegrees(desired_heading - gyro_heading)
-        turn = (2.3 * (-1.0 / 80.0) * angle_difference) + (0.05 * (angle_difference - self.last_difference))
+        turn = (1.1 * (-1.0 / 80.0) * angle_difference) + (0.05 * (angle_difference - self.last_difference))
         # turn = 0.7 * (-1.0 / 80.0) * angle_difference
         # turn = 0
 

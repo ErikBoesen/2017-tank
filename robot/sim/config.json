@@ -7,10 +7,10 @@
       "starting_y": 14
   	},
     "pwm": {
-      "9": "lf_motor",
-      "8": "lr_motor",
-      "7": "rf_motor",
-      "6": "rr_motor"
+      "0": "lf_motor",
+      "1": "lr_motor",
+      "2": "rf_motor",
+      "3": "rr_motor"
     }
   }
 }

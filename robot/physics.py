@@ -17,7 +17,7 @@ class PhysicsEngine(object):
 
         self.drivetrain = tankmodel.TankModel.theory(
             motor_cfgs.MOTOR_CFG_CIM,           # motor configuration
-            110 * units.lbs,                      # robot mass
+            80 * units.lbs,                      # robot mass
             12.75,                              # drivetrain gear ratio
             2,                                  # motors per side
             17.75 * units.inch,                      # robot wheelbase
@@ -42,12 +42,12 @@ class PhysicsEngine(object):
         """
 
         # Simulate the drivetrain
-        lf_motor = hal_data['pwm'][9]['value']
-        rf_motor = hal_data['pwm'][7]['value']
+        lf_motor = hal_data['pwm'][0b00]['value']
+        rf_motor = hal_data['pwm'][0b10]['value']
 
         # Not needed because front and rear should be in sync
-        # lr_motor = hal_data['pwm'][8]['value']
-        # rr_motor = hal_data['pwm'][6]['value']
+        # lr_motor = hal_data['pwm'][0b01]['value']
+        # rr_motor = hal_data['pwm'][0b11]['value']
 
         x, y, angle = self.drivetrain.get_distance(lf_motor, rf_motor, tm_diff)
         self.physics_controller.distance_drive(x, y, angle)
