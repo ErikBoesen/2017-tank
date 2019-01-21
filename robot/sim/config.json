@@ -1,0 +1,16 @@
+{
+  "pyfrc": {
+  	"robot": {
+  	  "w": 2.33,
+  	  "h": 1.80,
+      "starting_x": 1.8,
+      "starting_y": 14
+  	},
+    "pwm": {
+      "0": "lf_motor",
+      "1": "lr_motor",
+      "2": "rf_motor",
+      "3": "rr_motor"
+    }
+  }
+}

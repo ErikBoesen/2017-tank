@@ -8,7 +8,7 @@ SARAH_MULTIPLIER = 0.5
 
 
 class Drive:
-    drivetrain = wpilib.drive.DifferentialDrive
+    drivetrain: wpilib.drive.DifferentialDrive
 
     def __init__(self):
         self.enabled = False

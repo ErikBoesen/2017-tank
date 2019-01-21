@@ -1,16 +1,20 @@
 from magicbot.state_machine import state, timed_state, AutonomousStateMachine
-#from automations import
-#from magicbot import tunable
-from components import drive
+# from automations import
+# from magicbot import tunable
+from components import drive, trajectory_follower
 
 
 class Charge(AutonomousStateMachine):
     MODE_NAME = 'Charge'
     DEFAULT = True
 
-    drive = drive.Drive
+    drive: drive.Drive
+    follower: trajectory_follower.TrajectoryFollower
 
-    @timed_state(duration=3, first=True)
+    @state(first=True)
     def charge(self, initial_call):
-        # Move forward
-        self.drive.move(1, 0)
+        if initial_call:
+            self.follower.follow_trajectory('charge')
+
+        if not self.follower.is_following('charge'):
+            self.done()  # If using mutliple states use self.next_state(name)
